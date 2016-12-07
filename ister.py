@@ -1048,9 +1048,9 @@ def check_kernel_cmdline(f_kcmdline, sleep_time=15):
         run_command(command)
         time.sleep(sleep_time)
     if dns:
-        command = "echo 'nameserver {0}' >/etc/resolv.conf".\
-          format(dns)
-        run_command(command)
+        conf = open("/etc/resolv.conf}", "w")
+        conf.write("nameserver {0}".format(dns))
+        conf.close()
         time.sleep(sleep_time)
 
     # Fetch the file
