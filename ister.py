@@ -1010,13 +1010,46 @@ def check_kernel_cmdline(f_kcmdline, sleep_time=15):
     LOG.debug("kernel command line file: {0}".format(f_kcmdline))
     kernel_args = list()
     ister_conf_uri = None
+    interface = None
     with open(f_kcmdline, "r") as file:
         kernel_args = file.read().split(' ')
     for opt in kernel_args:
         if opt.startswith("isterconf="):
             ister_conf_uri = opt.split("=")[1]
+        if opt.startswith("interface="):
+            interface = opt.split("=")[1]
+        if opt.startswith("ip="):
+            ip = opt.split("=")[1]
+        if opt.startswith("mask="):
+            mask = opt.split("=")[1]
+        if opt.startswith("gateway="):
+            gateway = opt.split("=")[1]
+        if opt.startswith("dns="):
+            dns = opt.split("=")[1]
 
     LOG.debug("ister_conf_uri = {0}".format(ister_conf_uri))
+
+    # Configure the network connection
+    if interface:
+        LOG.debug("interface = {0}".format(interface))
+        LOG.debug("ip = {0}".format(ip))
+        LOG.debug("mask = {0}".format(mask))
+        LOG.debug("gateway = {0}".format(gateway))
+        LOG.debug("dns = {0}".format(dns))
+        command = "ip addr add local {0}/{1} dev {2}".\
+          format(ip, mask, interface)
+        run_command(command)
+        time.sleep(sleep_time)
+    if gateway:
+        command = "ip route add default via {0} dev {1}".\
+          format(gateway, interface)
+        run_command(command)
+        time.sleep(sleep_time)
+    if dns:
+        command = "echo 'nameserver {0}' >/etc/resolv.conf".\
+          format(dns)
+        run_command(command)
+        time.sleep(sleep_time)
 
     # Fetch the file
     if ister_conf_uri:
