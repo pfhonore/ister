@@ -1011,6 +1011,8 @@ def check_kernel_cmdline(f_kcmdline, sleep_time=15):
     kernel_args = list()
     ister_conf_uri = None
     interface = None
+    gateway = None
+    dns = None
     with open(f_kcmdline, "r") as file:
         kernel_args = file.read().split(' ')
     for opt in kernel_args:
