@@ -1048,7 +1048,7 @@ def check_kernel_cmdline(f_kcmdline, sleep_time=15):
         run_command(command)
         time.sleep(sleep_time)
     if dns:
-        conf = open("/etc/resolv.conf}", "w")
+        conf = open("/etc/resolv.conf", "w")
         conf.write("nameserver {0}".format(dns))
         conf.close()
         time.sleep(sleep_time)
